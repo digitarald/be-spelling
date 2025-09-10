@@ -1,0 +1,9 @@
+{
+	"servers": {
+		"vercel": {
+			"url": "https://mcp.vercel.com/harald-kirschners-projects/be-spelling",
+			"type": "http"
+		}
+	},
+	"inputs": []
+}
