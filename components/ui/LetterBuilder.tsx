@@ -89,15 +89,15 @@ export function LetterBuilder({ target, value, onChange, onComplete, disabled, c
   return (
     <div className={className}>
       {/* Display current attempt */}
-      <div className="mb-4 bg-gray-50 border-2 border-gray-200 rounded-2xl p-4 min-h-[64px] flex items-center justify-center gap-2 text-2xl font-bold tracking-wide select-none">
+      <div className="mb-4 bg-[var(--surface-alt)] border-2 border-[color:var(--border)] rounded-2xl p-4 min-h-[64px] flex items-center justify-center gap-2 text-2xl font-bold tracking-wide select-none">
         {normalized.split('').map((_, i) => (
           <span
             key={i}
             className={
               'w-10 h-12 flex items-center justify-center rounded-xl ' +
               (value[i]
-                ? 'bg-blue-500 text-white animate-fade-in'
-                : 'bg-white text-gray-300 border border-gray-200')
+                ? 'bg-[var(--accent)] text-[var(--btn-text-contrast)] animate-fade-in'
+                : 'bg-[var(--surface)] text-[color:var(--border)] border border-[color:var(--border)]')
             }
           >
             {value[i] ?? '•'}
@@ -124,8 +124,8 @@ export function LetterBuilder({ target, value, onChange, onComplete, disabled, c
               className={
                 'h-14 rounded-2xl text-2xl font-bold shadow-md transition-all touch-manipulation ' +
                 (used
-                  ? 'bg-gray-200 text-gray-400 line-through'
-                  : 'bg-white text-gray-800 hover:bg-blue-100 active:scale-95')
+                  ? 'bg-[var(--surface-alt)] text-[var(--muted)] line-through'
+                  : 'bg-[var(--surface)] text-[var(--foreground)] hover:brightness-95 active:scale-95')
               }
             >
               {unit.char}
@@ -140,7 +140,7 @@ export function LetterBuilder({ target, value, onChange, onComplete, disabled, c
           type="button"
           onClick={handleBackspace}
           disabled={disabled || value.length === 0}
-          className="flex-1 bg-gray-500 disabled:opacity-40 text-white font-bold py-3 rounded-2xl shadow-md active:scale-95"
+          className="flex-1 bg-[var(--accent)] disabled:opacity-40 text-[var(--btn-text-contrast)] font-bold py-3 rounded-2xl shadow-md active:scale-95 hover:brightness-95"
         >
           ⌫ Undo
         </button>
@@ -148,7 +148,7 @@ export function LetterBuilder({ target, value, onChange, onComplete, disabled, c
           type="button"
           onClick={handleReset}
           disabled={disabled || value.length === 0}
-          className="flex-1 bg-gray-400 disabled:opacity-40 text-white font-bold py-3 rounded-2xl shadow-md active:scale-95"
+          className="flex-1 bg-[var(--accent-active)] disabled:opacity-40 text-[var(--btn-text-contrast)] font-bold py-3 rounded-2xl shadow-md active:scale-95 hover:brightness-95"
         >
           🔄 Reset
         </button>

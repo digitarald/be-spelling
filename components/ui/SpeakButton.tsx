@@ -61,10 +61,10 @@ export function SpeakButton({ text, className = '', disabled = false, onSpeakSta
       disabled={disabled || isSpeaking}
       className={`
         ${className}
-        ${isSpeaking ? 'animate-pulse bg-blue-600' : 'bg-blue-500 hover:bg-blue-600'}
+        ${isSpeaking ? 'animate-pulse bg-[var(--accent-active)]' : 'bg-[var(--accent)] hover:brightness-95'}
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}
-        transition-all duration-200 text-white font-bold py-4 px-8 rounded-full text-lg
-        shadow-lg touch-manipulation
+        transition-all duration-200 font-bold py-4 px-8 rounded-full text-lg
+        shadow-lg touch-manipulation text-[var(--btn-text-contrast)]
       `}
     >
       {isSpeaking ? '🔊 Speaking...' : '🔊 Listen'}

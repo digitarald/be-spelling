@@ -1,10 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GenerateWordsRequest, GenerateWordsResponse } from '@/lib/types';
 
+// Simple in-memory rate limiter (process-level; resets on server restart)
+// Rationale: Local-first app; prevents accidental rapid-fire generation spam.
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 5;   // max requests per window
+let recentRequests: number[] = [];
+
+// Hard ceiling for total stored words (local IndexedDB on client). API relies on client telling us the total.
+const MAX_TOTAL_WORDS = 100;
+
 export async function POST(request: NextRequest) {
   try {
+    // --- Rate limiting ----------------------------------------------------
+    const now = Date.now();
+    recentRequests = recentRequests.filter(ts => now - ts < RATE_LIMIT_WINDOW_MS);
+    if (recentRequests.length >= RATE_LIMIT_MAX_REQUESTS) {
+      const retryAfterMs = RATE_LIMIT_WINDOW_MS - (now - recentRequests[0]);
+      return NextResponse.json({
+        error: 'Rate limit exceeded. Please wait before generating more words.',
+        code: 'RATE_LIMIT',
+        limit: RATE_LIMIT_MAX_REQUESTS,
+        windowSeconds: RATE_LIMIT_WINDOW_MS / 1000,
+        retryAfterSeconds: Math.ceil(retryAfterMs / 1000)
+      }, { status: 429 });
+    }
+    recentRequests.push(now);
+
     const body: GenerateWordsRequest = await request.json();
-    const { promptTemplate, seed } = body;
+    const { promptTemplate, seed, existingWords = [], existingWordCount } = body;
 
     if (!promptTemplate) {
       return NextResponse.json({ error: 'promptTemplate is required' }, { status: 400 });
@@ -16,8 +40,39 @@ export async function POST(request: NextRequest) {
     }
 
     // Construct the full prompt
+    // Normalize and constrain existing words list for prompt (avoid gigantic prompts)
+    const normalizedExisting = Array.from(
+      new Set(
+        (existingWords || [])
+          .filter(w => typeof w === 'string')
+          .map(w => w.trim().toLowerCase())
+          .filter(w => w.length > 0 && w.length <= 30)
+      )
+    );
+    const MAX_EXISTING_IN_PROMPT = 120; // heuristic cap
+    const existingSample = normalizedExisting.slice(-MAX_EXISTING_IN_PROMPT);
+
+    const exclusionListForPrompt = existingSample.join(', ');
+    // Determine total existing (may be higher than the sample length provided for exclusion)
+    const existingTotal = typeof existingWordCount === 'number' && existingWordCount >= 0
+      ? existingWordCount
+      : normalizedExisting.length;
+
+    if (existingTotal >= MAX_TOTAL_WORDS) {
+      return NextResponse.json({
+        error: 'Word limit reached (100). Delete some words before generating more.',
+        code: 'WORD_LIMIT',
+        limit: MAX_TOTAL_WORDS
+      }, { status: 429 });
+    }
+
+    const remainingSlots = MAX_TOTAL_WORDS - existingTotal;
+    const targetGenerateCount = Math.min(10, remainingSlots);
+
     const systemPrompt = `You are a helpful assistant that generates age-appropriate spelling words for children.
-Generate EXACTLY 10 UNIQUE words based on the user's criteria.
+Generate EXACTLY ${targetGenerateCount} UNIQUE words based on the user's criteria.
+
+Do NOT use any word from this exclusion list (case-insensitive): ${exclusionListForPrompt || '(no exclusions)'}
 
 For EACH word produce a JSON object with:
   - "text": the lowercase spelling word (letters only, no surrounding quotes inside the value)
@@ -91,17 +146,30 @@ Return ONLY valid JSON with this shape:
       return NextResponse.json({ error: 'Invalid word list format' }, { status: 500 });
     }
 
-    // Validate each word
-    const validWords = wordsData.words.filter((word: any) => 
-      word && 
-      typeof word.text === 'string' && 
-      typeof word.hint === 'string' &&
-      word.text.trim().length > 0 &&
-      word.hint.trim().length > 0
-    );
+    // Validate each word & perform de-duplication against generated set + existing
+    const existingSet = new Set(normalizedExisting);
+    const seenGenerated = new Set<string>();
+    const validWords = wordsData.words
+      .filter((word: any) => 
+        word && 
+        typeof word.text === 'string' && 
+        typeof word.hint === 'string' &&
+        word.text.trim().length > 0 &&
+        word.hint.trim().length > 0
+      )
+      .map((word: any) => ({
+        text: word.text.trim().toLowerCase(),
+        hint: word.hint.trim()
+      }))
+      .filter(({ text }: { text: string }) => {
+        if (existingSet.has(text)) return false; // exclude existing
+        if (seenGenerated.has(text)) return false; // exclude duplicates in this batch
+        seenGenerated.add(text);
+        return true;
+      });
 
     if (validWords.length === 0) {
-      return NextResponse.json({ error: 'No valid words generated' }, { status: 500 });
+      return NextResponse.json({ error: 'No valid novel words generated (all duplicates?)' }, { status: 500 });
     }
 
     // Sanitization: ensure hints do not leak their word
@@ -123,11 +191,13 @@ Return ONLY valid JSON with this shape:
       return safeHint;
     }
 
+    // Enforce ceiling defensively (should already have asked model for the reduced count)
+    const limited = validWords.slice(0, remainingSlots);
+
     const response_data: GenerateWordsResponse = {
-      words: validWords.map((word: any) => {
-        const text = word.text.trim().toLowerCase();
-        const rawHint = word.hint.trim();
-        const hint = sanitizeHint(text, rawHint);
+      words: limited.map((word: any) => {
+        const text = word.text; // already normalized lower-case
+        const hint = sanitizeHint(text, word.hint);
         return { text, hint };
       })
     };

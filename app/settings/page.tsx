@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { AppFooter } from '@/components/ui/AppFooter';
 
 interface AppSettings {
   promptTemplate: string;
@@ -87,17 +88,17 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-blue-50">
+    <div className="min-h-screen bg-[var(--background)]">
       {/* Header */}
-      <div className="bg-white shadow-sm p-4">
+      <div className="bg-[var(--surface)] shadow-sm p-4 border-b border-[color:var(--border)]">
         <div className="flex items-center max-w-md mx-auto">
           <Link 
             href="/"
-            className="text-blue-600 hover:text-blue-800 mr-4"
+            className="text-[var(--accent)] hover:brightness-110 mr-4"
           >
             ← Back
           </Link>
-          <h1 className="text-xl font-bold text-gray-800">⚙️ Settings</h1>
+          <h1 className="text-xl font-bold text-[var(--foreground)]">⚙️ Settings</h1>
         </div>
       </div>
 
@@ -106,57 +107,41 @@ export default function SettingsPage() {
         
         {/* Success Message */}
         {showSuccess && (
-          <div className="bg-green-100 border-2 border-green-300 rounded-2xl p-4 text-center animate-bounce-in">
-            <p className="text-green-800 font-semibold">✅ Settings saved!</p>
+          <div className="bg-[var(--rate-nailed)]/30 border-2 border-[color:var(--rate-nailed)] rounded-2xl p-4 text-center animate-bounce-in">
+            <p className="text-[var(--foreground)] font-semibold">✅ Settings saved!</p>
           </div>
         )}
 
-        {/* AI Model Info */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg">
-          <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            🤖 AI Model
-          </h2>
-          <div className="bg-gray-50 rounded-xl p-4">
-            <p className="text-gray-700 font-medium">Google Gemini 2.5 Flash</p>
-            <p className="text-sm text-gray-500 mt-1">
-              Fast and efficient model optimized for educational content generation.
-            </p>
-          </div>
-          <p className="text-xs text-gray-500 mt-3">
-            To use a different model, set <code className="bg-gray-200 px-1 rounded text-xs">OPENROUTER_DEFAULT_MODEL</code> in your environment.
-          </p>
-        </div>
-
         {/* Prompt Template */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg">
-          <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <div className="bg-[var(--surface)] rounded-2xl p-6 shadow-lg border border-[color:var(--border)]">
+          <h2 className="text-lg font-bold text-[var(--foreground)] mb-4 flex items-center gap-2">
             📝 Word Generation Prompt
           </h2>
           <textarea
             value={settings.promptTemplate}
             onChange={(e) => setSettings(prev => ({ ...prev, promptTemplate: e.target.value }))}
-            className="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none resize-none"
+            className="w-full p-4 border-2 border-[color:var(--border)] rounded-xl focus:border-[color:var(--accent-active)] focus:outline-none resize-none bg-[var(--surface-alt)] text-[var(--foreground)]"
             rows={4}
             placeholder="Describe what kind of spelling words you want..."
           />
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-sm text-[var(--muted)] mt-2">
             Customize the prompt to generate words appropriate for your child's level and interests.
           </p>
         </div>
 
         {/* Voice Settings */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg">
-          <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <div className="bg-[var(--surface)] rounded-2xl p-6 shadow-lg border border-[color:var(--border)]">
+          <h2 className="text-lg font-bold text-[var(--foreground)] mb-4 flex items-center gap-2">
             🔊 Voice & Speech
           </h2>
-          
+
           {/* Voice Selection */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Voice</label>
+            <label className="block text-sm font-medium text-[var(--muted)] mb-2">Voice</label>
             <select
               value={settings.selectedVoice}
               onChange={(e) => setSettings(prev => ({ ...prev, selectedVoice: e.target.value }))}
-              className="w-full p-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
+              className="w-full p-3 border-2 border-[color:var(--border)] rounded-xl focus:border-[color:var(--accent-active)] focus:outline-none bg-[var(--surface-alt)] text-[var(--foreground)]"
             >
               <option value="">Default Voice</option>
               {availableVoices
@@ -171,7 +156,7 @@ export default function SettingsPage() {
 
           {/* Speech Rate */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-[var(--muted)] mb-2">
               Speech Rate: {settings.speechRate}
             </label>
             <input
@@ -181,9 +166,9 @@ export default function SettingsPage() {
               step="0.1"
               value={settings.speechRate}
               onChange={(e) => setSettings(prev => ({ ...prev, speechRate: parseFloat(e.target.value) }))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-2 bg-[var(--surface-alt)] rounded-lg appearance-none cursor-pointer"
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className="flex justify-between text-xs text-[var(--muted)] mt-1">
               <span>Slower</span>
               <span>Faster</span>
             </div>
@@ -191,7 +176,7 @@ export default function SettingsPage() {
 
           {/* Speech Pitch */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-[var(--muted)] mb-2">
               Speech Pitch: {settings.speechPitch}
             </label>
             <input
@@ -201,9 +186,9 @@ export default function SettingsPage() {
               step="0.1"
               value={settings.speechPitch}
               onChange={(e) => setSettings(prev => ({ ...prev, speechPitch: parseFloat(e.target.value) }))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-2 bg-[var(--surface-alt)] rounded-lg appearance-none cursor-pointer"
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className="flex justify-between text-xs text-[var(--muted)] mt-1">
               <span>Lower</span>
               <span>Higher</span>
             </div>
@@ -212,7 +197,7 @@ export default function SettingsPage() {
           {/* Test Voice Button */}
           <button
             onClick={testVoice}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-md"
+            className="w-full bg-[var(--accent)] hover:brightness-95 text-[var(--btn-text-contrast)] font-bold py-3 px-4 rounded-xl transition-colors shadow-md"
           >
             🔊 Test Voice
           </button>
@@ -225,46 +210,14 @@ export default function SettingsPage() {
           className={`
             w-full font-bold py-4 px-6 rounded-2xl text-lg shadow-lg transition-all
             ${isSaving 
-              ? 'bg-gray-400 cursor-not-allowed' 
-              : 'bg-green-500 hover:bg-green-600 active:scale-95'
-            } text-white
+              ? 'bg-[var(--muted)] cursor-not-allowed text-[var(--btn-text-contrast)]' 
+              : 'bg-[var(--rate-nailed)] hover:brightness-95 active:scale-95 text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)]'
+            }
           `}
         >
           {isSaving ? '💾 Saving...' : '💾 Save Settings'}
         </button>
-
-        {/* Environment Variable Notice */}
-        <div className="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-4">
-          <h3 className="font-semibold text-yellow-800 mb-2">📋 Setup Required</h3>
-          <p className="text-sm text-yellow-700 mb-2">
-            To generate new words, add your OpenRouter API key to <code className="bg-yellow-200 px-1 rounded">.env.local</code>:
-          </p>
-          <code className="block bg-yellow-100 p-2 rounded text-xs font-mono mb-2">
-            OPENROUTER_API_KEY=your_api_key_here
-          </code>
-          <p className="text-sm text-yellow-700">
-            Optional: Override the default model (Google Gemini 2.5 Flash):
-          </p>
-          <code className="block bg-yellow-100 p-2 rounded text-xs font-mono">
-            OPENROUTER_DEFAULT_MODEL=anthropic/claude-3.5-sonnet
-          </code>
-        </div>
-
-        {/* Navigation */}
-        <div className="flex gap-3">
-          <Link 
-            href="/"
-            className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-2xl text-center transition-colors shadow-md"
-          >
-            📖 Study
-          </Link>
-          <Link 
-            href="/manage"
-            className="flex-1 bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-4 rounded-2xl text-center transition-colors shadow-md"
-          >
-            📚 Manage Words
-          </Link>
-        </div>
+        <AppFooter />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { AppFooter } from '@/components/ui/AppFooter';
 import { Word } from '@/lib/types';
 import { wordRepository, reviewRepository, srsRepository } from '@/lib/storage/repositories';
 
@@ -84,12 +85,15 @@ export default function ManagePage() {
       const promptTemplate = settings.promptTemplate || 
         '5th-grade level spelling words, mix of multisyllabic words, no proper nouns, focus on commonly misspelled words';
 
+      // Collect existing words to help backend avoid duplicates
+  const existingWords = (await wordRepository.getAllWords()).map(w => w.text);
+
       const response = await fetch('/api/generate-words', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ promptTemplate }),
+        body: JSON.stringify({ promptTemplate, existingWords }),
       });
 
       if (!response.ok) {
@@ -220,18 +224,18 @@ export default function ManagePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-blue-50">
+    <div className="min-h-screen bg-[var(--background)]">
       {/* Header */}
-      <div className="bg-white shadow-sm p-4">
+  <div className="bg-[var(--surface)] shadow-sm p-4 border-b border-[color:var(--border)]">
         <div className="flex items-center justify-between max-w-md mx-auto">
           <div className="flex items-center">
             <Link 
               href="/"
-              className="text-blue-600 hover:text-blue-800 mr-4"
+              className="text-[var(--accent)] hover:brightness-110 mr-4"
             >
               ← Back
             </Link>
-            <h1 className="text-xl font-bold text-gray-800">📚 Manage Words</h1>
+            <h1 className="text-xl font-bold text-[var(--foreground)]">📚 Manage Words</h1>
           </div>
         </div>
       </div>
@@ -239,19 +243,19 @@ export default function ManagePage() {
       <div className="max-w-md mx-auto p-4 space-y-6">
         
         {/* Stats */}
-        <div className="bg-white rounded-2xl p-4 shadow-lg">
+        <div className="bg-[var(--surface)] rounded-2xl p-4 shadow-lg border border-[color:var(--border)]">
           <div className="flex justify-around text-center">
             <div>
-              <div className="text-2xl font-bold text-gray-800">{stats.total}</div>
-              <div className="text-sm text-gray-600">Total</div>
+              <div className="text-2xl font-bold text-[var(--foreground)]">{stats.total}</div>
+              <div className="text-sm text-[var(--muted)]">Total</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-orange-600">{stats.due}</div>
-              <div className="text-sm text-gray-600">Due</div>
+              <div className="text-2xl font-bold text-[var(--rate-almost)]">{stats.due}</div>
+              <div className="text-sm text-[var(--muted)]">Due</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-green-600">{stats.learned}</div>
-              <div className="text-sm text-gray-600">Learned</div>
+              <div className="text-2xl font-bold text-[var(--rate-nailed)]">{stats.learned}</div>
+              <div className="text-sm text-[var(--muted)]">Learned</div>
             </div>
           </div>
         </div>
@@ -264,9 +268,9 @@ export default function ManagePage() {
             className={`
               w-full font-bold py-4 px-6 rounded-2xl text-lg shadow-lg transition-all
               ${isGenerating 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-blue-500 hover:bg-blue-600 active:scale-95'
-              } text-white
+                ? 'bg-[var(--muted)] cursor-not-allowed text-[var(--btn-text-contrast)]' 
+                : 'bg-[var(--accent)] hover:brightness-95 active:scale-95 text-[var(--btn-text-contrast)]'
+              }
             `}
           >
             {isGenerating ? '🔄 Generating...' : '✨ Generate New Words'}
@@ -277,8 +281,8 @@ export default function ManagePage() {
             className={`
               w-full font-bold py-3 px-6 rounded-2xl text-md shadow-lg transition-all
               ${words.length === 0
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-red-500 hover:bg-red-600 active:scale-95 text-white'
+                ? 'bg-[var(--surface-alt)] text-[var(--muted)] cursor-not-allowed border border-[color:var(--border)]'
+                : 'bg-[var(--danger)] hover:brightness-95 active:scale-95 text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)]'
               }
             `}
           >
@@ -287,7 +291,7 @@ export default function ManagePage() {
           
           <button
             onClick={() => setShowImportExport(!showImportExport)}
-            className="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-2xl transition-colors shadow-md"
+            className="w-full bg-[var(--accent-active)] hover:brightness-110 text-[var(--btn-text-contrast)] font-bold py-3 px-4 rounded-2xl transition-colors shadow-md"
           >
             📁 Import / Export
           </button>
@@ -295,25 +299,25 @@ export default function ManagePage() {
 
         {/* Import/Export Panel */}
         {showImportExport && (
-          <div className="bg-white rounded-2xl p-6 shadow-lg animate-fade-in">
-            <h3 className="font-bold text-gray-800 mb-4">📁 Import / Export Data</h3>
+          <div className="bg-[var(--surface)] rounded-2xl p-6 shadow-lg animate-fade-in border border-[color:var(--border)]">
+            <h3 className="font-bold text-[var(--foreground)] mb-4">📁 Import / Export Data</h3>
             
             <div className="space-y-4">
               <button
                 onClick={exportData}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-xl transition-colors"
+                className="w-full bg-[var(--rate-nailed)] hover:brightness-95 text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)] font-bold py-3 px-4 rounded-xl transition-colors"
               >
                 📥 Export Data
               </button>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                   Import Data (JSON)
                 </label>
                 <textarea
                   value={importData}
                   onChange={(e) => setImportData(e.target.value)}
-                  className="w-full p-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none resize-none"
+                  className="w-full p-3 border-2 border-[color:var(--border)] rounded-xl focus:border-[color:var(--accent-active)] focus:outline-none resize-none bg-[var(--surface-alt)] text-[var(--foreground)]"
                   rows={4}
                   placeholder="Paste exported JSON data here..."
                 />
@@ -323,8 +327,8 @@ export default function ManagePage() {
                   className={`
                     w-full mt-2 font-bold py-3 px-4 rounded-xl transition-colors
                     ${importData.trim() 
-                      ? 'bg-orange-500 hover:bg-orange-600 text-white' 
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      ? 'bg-[var(--rate-almost)] hover:brightness-95 text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)]' 
+                      : 'bg-[var(--surface-alt)] text-[var(--muted)] cursor-not-allowed border border-[color:var(--border)]'
                     }
                   `}
                 >
@@ -336,33 +340,33 @@ export default function ManagePage() {
         )}
 
         {/* Word List */}
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="p-4 bg-gray-50 border-b">
-            <h3 className="font-bold text-gray-800">📝 Word List ({words.length})</h3>
+        <div className="bg-[var(--surface)] rounded-2xl shadow-lg overflow-hidden border border-[color:var(--border)]">
+          <div className="p-4 bg-[var(--surface-alt)] border-b border-[color:var(--border)]">
+            <h3 className="font-bold text-[var(--foreground)]">📝 Word List ({words.length})</h3>
           </div>
           
           <div className="max-h-96 overflow-y-auto">
             {words.length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
+              <div className="p-8 text-center text-[var(--muted)]">
                 <div className="text-4xl mb-4">📝</div>
                 <p>No words yet! Generate some to get started.</p>
               </div>
             ) : (
               <div className="space-y-2 p-2">
                 {words.map((word) => (
-                  <div key={word.id} className="border border-gray-200 rounded-xl p-4">
+                  <div key={word.id} className="border border-[color:var(--border)] rounded-xl p-4 bg-[var(--surface-alt)]">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <h4 className="font-bold text-lg text-gray-800">{word.text}</h4>
-                        <p className="text-sm text-gray-600 mb-2">{word.hint}</p>
-                        <div className="flex gap-4 text-xs text-gray-500">
+                        <h4 className="font-bold text-lg text-[var(--foreground)]">{word.text}</h4>
+                        <p className="text-sm text-[var(--muted)] mb-2">{word.hint}</p>
+                        <div className="flex gap-4 text-xs text-[var(--muted)]">
                           <span>📊 {word.reviewCount} reviews</span>
                           <span>🕒 {formatNextDue(word.nextDue)}</span>
                         </div>
                       </div>
                       <button
                         onClick={() => deleteWord(word.id)}
-                        className="text-red-500 hover:text-red-700 p-2"
+                        className="text-[var(--danger)] hover:brightness-125 p-2"
                       >
                         🗑️
                       </button>
@@ -374,21 +378,7 @@ export default function ManagePage() {
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className="flex gap-3">
-          <Link 
-            href="/"
-            className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-2xl text-center transition-colors shadow-md"
-          >
-            📖 Study
-          </Link>
-          <Link 
-            href="/settings"
-            className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-2xl text-center transition-colors shadow-md"
-          >
-            ⚙️ Settings
-          </Link>
-        </div>
+        <AppFooter />
       </div>
     </div>
   );

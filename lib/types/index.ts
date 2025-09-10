@@ -42,6 +42,11 @@ export interface AppSettings {
 export interface GenerateWordsRequest {
   promptTemplate: string;
   seed?: number;
+  // Optional list of already existing words (raw text) to avoid generating duplicates
+  existingWords?: string[];
+  // (New) Total count of words currently stored locally (may be larger than provided existingWords sample)
+  // Used by the API route to enforce a hard ceiling (100) and to cap additional generation.
+  existingWordCount?: number;
 }
 
 export interface GenerateWordsResponse {

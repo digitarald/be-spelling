@@ -1,8 +1,34 @@
 @import "tailwindcss";
 
+/* Light (system) theme base - gentle pastel palette */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core surfaces */
+  --background: #fffdf9; /* warm off-white */
+  --foreground: #1f2a33; /* deep readable slate */
+  --surface: #ffffff;
+  --surface-alt: #f5f6fb;
+  --border: #e3e6ed;
+
+  /* Accents & semantic colors (pastel friendly) */
+  --accent: #7ab6f9;        /* soft sky blue */
+  --accent-active: #4d9af5; /* stronger for active / speaking */
+  --accent-contrast: #0f2542;
+  --rate-nailed: #8ed79f;  /* mint green */
+  --rate-almost: #ffd37e;  /* peachy yellow */
+  --rate-stumped: #ff9fa5; /* soft coral red */
+  --warning: #ffe089;
+  --danger: #ff8c8c;
+  --info: #b7e4f9;
+  --muted: #64748b;
+
+  /* Hint / instructional surfaces */
+  --hint-bg: #fff9e6;
+  --hint-border: #ffe3a3;
+  --hint-text: #754c00;
+
+  /* Button / chip text colors (light theme prefers dark text on pastels) */
+  --btn-text: #1f2a33;
+  --btn-text-contrast: #ffffff;
 }
 
 @theme inline {
@@ -14,15 +40,62 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f172a; /* slate-900 */
+    --foreground: #f1f5f9; /* slate-100 */
+    --surface: #1e293b;
+    --surface-alt: #24324a;
+    --border: #334155;
+
+    --accent: #60a5fa;
+    --accent-active: #3b82f6;
+    --accent-contrast: #dbeafe;
+    --rate-nailed: #34d399; /* more saturated for contrast in dark */
+    --rate-almost: #fbbf24;
+    --rate-stumped: #f87171;
+    --warning: #facc15;
+    --danger: #ef4444;
+    --info: #22d3ee;
+    --muted: #94a3b8;
+
+  --hint-bg: #3a2f12;
+  --hint-border: #a16207;
+  --hint-text: #facc15;
+
+    /* In dark mode pastel backgrounds shift to richer tones; keep readable text */
+    --btn-text: #0f172a; /* for light-ish fills */
+    --btn-text-contrast: #ffffff; /* when using strong accent backgrounds */
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Utility classes leveraging the new design tokens */
+.surface {
+  background: var(--surface);
+}
+.surface-alt {
+  background: var(--surface-alt);
+}
+.border-token {
+  border-color: var(--border);
+}
+.btn-accent {
+  background: var(--accent);
+  color: var(--btn-text-contrast);
+}
+.btn-accent-active {
+  background: var(--accent-active);
+  color: var(--btn-text-contrast);
+}
+.focus-ring {
+  outline: 3px solid var(--accent-active);
+  outline-offset: 2px;
 }
 
 /* Custom animations for kids-friendly interactions */
@@ -98,6 +171,6 @@ button {
 
 /* Better focus styles for accessibility */
 button:focus-visible {
-  outline: 3px solid #3b82f6;
+  outline: 3px solid var(--accent-active);
   outline-offset: 2px;
 }

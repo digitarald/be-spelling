@@ -1,143 +1,67 @@
-# Be-Spelling 📖✨
+# Be‑Spelling 📖✨
 
-A kids-friendly spelling learning app using AI-generated word lists and spaced repetition (SM-2 algorithm). Built with Next.js 15, React 19, and local-only storage for privacy.
+Local‑first spelling practice for kids: hear the word, build the spelling, get gentle feedback, and retain it through spaced repetition. All progress stays in the browser.
 
-## Features
+## Why
+Fast to start, safe for kids (no accounts / tracking), and powered by a lightweight SM‑2 variant + optional AI word generation.
 
-- 🔊 **Text-to-Speech**: Browser-based TTS to speak words aloud
-- 📝 **Interactive Learning**: Type what you hear, get hints, reveal answers
-- ⭐ **Smart Rating**: "Nailed it", "Almost", "Stumped" feedback system
-- 🧠 **Spaced Repetition**: SM-2 algorithm for optimal learning intervals
-- 🤖 **AI Word Generation**: OpenRouter integration for age-appropriate word lists
-- 📱 **Mobile-First**: Kids-friendly touch interface, large buttons
-- 🔒 **Privacy-First**: All data stored locally in IndexedDB, no login required
-- 💾 **Import/Export**: Backup and restore word lists as JSON
+## Core Features
+- 🔊 Speech (Web Speech API)
+- 🧠 Spaced repetition (simplified SM‑2)
+- 📝 Hint + immediate answer reveal
+- ⭐ Auto rating (exact / near miss detection)
+- 🤖 (Optional) AI word + hint generation
+- 💾 Import / Export JSON backup
+- 🔒 100% local data (IndexedDB + localStorage)
 
 ## Quick Start
-
-1. **Clone and install:**
-   ```bash
-   git clone <repository>
-   cd be-spelling
-   npm install
-   ```
-
-2. **Set up OpenRouter API:**
-   ```bash
-   cp .env.local.example .env.local
-   # Edit .env.local and add your OpenRouter API key
-   ```
-
-3. **Run development server:**
-   ```bash
-   npm run dev --turbopack
-   ```
-
-4. **Open http://localhost:3000**
-
-## App Flow
-
-1. 🔊 App speaks a word (Web Speech API)
-2. 📝 Student types the spelling
-3. 💡 Tap "Hint" for phonics tips or example sentences  
-4. 👁️ Tap "Show word" to reveal correct spelling
-5. ⭐ Rate your performance: "Nailed it" / "Almost" / "Stumped"
-6. 📚 Next word appears based on spaced repetition schedule
-
-## Pages
-
-- **`/`** - Main study interface with TTS, input, and rating
-- **`/settings`** - Configure AI model, prompts, and voice settings
-- **`/manage`** - View word lists, generate new words, import/export data
-
-## Tech Stack
-
-- **Framework**: Next.js 15.5.2 with App Router and TurboModepack
-- **Frontend**: React 19.1.0, TypeScript 5.x, Tailwind CSS v4
-- **Storage**: IndexedDB via Dexie (local-only, no server database)
-- **AI**: OpenRouter API for word generation
-- **Speech**: Web Speech API for text-to-speech
-- **Algorithm**: SM-2 spaced repetition with Anki-style adjustments
-
-## Data Models
-
-```typescript
-type Rating = 'NAILED' | 'ALMOST' | 'STUMPED'
-type Word = { id: string; text: string; hint: string }
-type Review = { wordId: string; ts: number; rating: Rating }
-type SRS = { wordId: string; ease: number; interval: number; due: string }
-```
-
-## Configuration
-
-### OpenRouter Setup
-1. Get an API key from [OpenRouter](https://openrouter.ai/keys)
-2. Add to `.env.local`: `OPENROUTER_API_KEY=your_key_here`
-3. Default model is Google Gemini 2.5 Flash (fast and efficient)
-4. Optional: Override model with `OPENROUTER_DEFAULT_MODEL=anthropic/claude-3.5-sonnet`
-
-### Voice Settings
-- Select from available system voices
-- Adjust speech rate (0.5x - 1.5x)  
-- Adjust pitch (0.5x - 1.5x)
-- Test voice with sample phrase
-
-### Word Generation
-- Customize prompts for different grade levels
-- Examples: "5th-grade Dolch words", "3rd-grade phonics focus", etc.
-- AI generates 10 words per request with hints
-
-## Development
-
 ```bash
-# Development with TurboModepack
-npm run dev --turbopack
-
-# Build for production
-npm run build --turbopack
-
-# Start production server
-npm start
+git clone <repository>
+cd be-spelling
+npm install
+cp .env.local.example .env.local   # add OPENROUTER_API_KEY if you want AI generation
+npm run dev
+# open http://localhost:3000
 ```
 
-## Project Structure
-
-```
-app/
-├── page.tsx              # Main study interface
-├── settings/page.tsx     # Configuration page
-├── manage/page.tsx       # Word management
-└── api/generate-words/   # OpenRouter API route
-
-lib/
-├── types/               # TypeScript definitions
-├── storage/             # IndexedDB repositories (Dexie)
-└── srs/                # SM-2 algorithm implementation
-
-components/
-└── ui/                 # Reusable UI components
+Want production?
+```bash
+npm run build && npm start
 ```
 
-## Privacy & Data
+## Scripts
+```bash
+npm run dev     # develop (Turbopack)
+npm run build   # production build
+npm start       # run built app
+npm run lint    # lint sources
+```
 
-- **Local-only storage**: All progress saved in browser's IndexedDB
-- **No user accounts**: No sign-up or login required
-- **No tracking**: No analytics or data collection
-- **Export/import**: Full control over your data
-- **Offline capable**: Works without internet (after initial load)
+## Key Pages
+- `/` Study flow (speech → build → hint → check → rate → next)
+- `/manage` Generate, list, delete, import/export words
+- `/settings` Prompt template + voice / speech controls
+
+## Docs & Internals
+- Product narrative & scope: `PRODUCT.md`
+- Architecture & data contracts: `AGENTS.md`
+- Scheduler logic: `lib/srs/scheduler.ts`
+- Storage layer: `lib/storage/*`
+
+## Tech Stack (brief)
+Next.js 15 (App Router, Turbopack) · React 19 · TypeScript (strict) · Tailwind CSS v4 · Dexie (IndexedDB) · Web Speech API · OpenRouter (server route only) · uuid
+
+## Privacy
+No accounts, no analytics, no network calls except on‑demand AI generation (if configured). Your learner’s progress never leaves the device.
 
 ## Contributing
-
-1. Follow the existing TypeScript patterns
-2. Use the repository pattern for data access
-3. Keep components mobile-friendly with large touch targets
-4. Test on actual mobile devices for kid usability
-5. Maintain local-first philosophy
+Small PRs welcome. Keep:
+1. Types & invariants in sync with `AGENTS.md`
+2. No direct Dexie access in UI (use repositories)
+3. Mobile / touch ergonomics ≥44px targets
+4. Local‑first principle (no surprise network writes)
 
 ## License
+See `LICENSE`.
 
-Open source - see LICENSE file for details.
-
----
-
-Built with ❤️ for young learners. Happy spelling! 🌟
+–– Happy spelling! 🌟
