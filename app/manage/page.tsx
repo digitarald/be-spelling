@@ -214,10 +214,10 @@ export default function ManagePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-purple-100 to-blue-100 flex items-center justify-center">
+      <div className="min-h-screen app-loading-gradient flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin text-6xl mb-4">📚</div>
-          <p className="text-xl font-semibold text-gray-600">Loading words...</p>
+          <p className="text-xl font-semibold text-[var(--muted)]">Loading words...</p>
         </div>
       </div>
     );
@@ -250,11 +250,11 @@ export default function ManagePage() {
               <div className="text-sm text-[var(--muted)]">Total</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-[var(--rate-almost)]">{stats.due}</div>
+              <div className="text-2xl font-bold text-[var(--rate-almost-strong)]">{stats.due}</div>
               <div className="text-sm text-[var(--muted)]">Due</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-[var(--rate-nailed)]">{stats.learned}</div>
+              <div className="text-2xl font-bold text-[var(--rate-nailed-strong)]">{stats.learned}</div>
               <div className="text-sm text-[var(--muted)]">Learned</div>
             </div>
           </div>
@@ -268,8 +268,8 @@ export default function ManagePage() {
             className={`
               w-full font-bold py-4 px-6 rounded-2xl text-lg shadow-lg transition-all
               ${isGenerating 
-                ? 'bg-[var(--muted)] cursor-not-allowed text-[var(--btn-text-contrast)]' 
-                : 'bg-[var(--accent)] hover:brightness-95 active:scale-95 text-[var(--btn-text-contrast)]'
+                ? 'bg-[var(--muted)] cursor-not-allowed btn-bright-text' 
+                : 'bg-[var(--accent)] hover:brightness-95 active:scale-95 btn-bright-text'
               }
             `}
           >
@@ -282,7 +282,7 @@ export default function ManagePage() {
               w-full font-bold py-3 px-6 rounded-2xl text-md shadow-lg transition-all
               ${words.length === 0
                 ? 'bg-[var(--surface-alt)] text-[var(--muted)] cursor-not-allowed border border-[color:var(--border)]'
-                : 'bg-[var(--danger)] hover:brightness-95 active:scale-95 text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)]'
+                : 'bg-[var(--danger)] hover:brightness-95 active:scale-95 btn-bright-text'
               }
             `}
           >
@@ -291,7 +291,7 @@ export default function ManagePage() {
           
           <button
             onClick={() => setShowImportExport(!showImportExport)}
-            className="w-full bg-[var(--accent-active)] hover:brightness-110 text-[var(--btn-text-contrast)] font-bold py-3 px-4 rounded-2xl transition-colors shadow-md"
+            className="w-full bg-[var(--accent-active)] hover:brightness-110 btn-bright-text font-bold py-3 px-4 rounded-2xl transition-colors shadow-md"
           >
             📁 Import / Export
           </button>
@@ -305,7 +305,7 @@ export default function ManagePage() {
             <div className="space-y-4">
               <button
                 onClick={exportData}
-                className="w-full bg-[var(--rate-nailed)] hover:brightness-95 text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)] font-bold py-3 px-4 rounded-xl transition-colors"
+                className="w-full bg-[var(--rate-nailed)] hover:brightness-95 btn-bright-text font-bold py-3 px-4 rounded-xl transition-colors"
               >
                 📥 Export Data
               </button>
@@ -327,7 +327,7 @@ export default function ManagePage() {
                   className={`
                     w-full mt-2 font-bold py-3 px-4 rounded-xl transition-colors
                     ${importData.trim() 
-                      ? 'bg-[var(--rate-almost)] hover:brightness-95 text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)]' 
+                      ? 'bg-[var(--rate-almost)] hover:brightness-95 btn-bright-text' 
                       : 'bg-[var(--surface-alt)] text-[var(--muted)] cursor-not-allowed border border-[color:var(--border)]'
                     }
                   `}

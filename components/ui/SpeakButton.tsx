@@ -64,7 +64,7 @@ export function SpeakButton({ text, className = '', disabled = false, onSpeakSta
         ${isSpeaking ? 'animate-pulse bg-[var(--accent-active)]' : 'bg-[var(--accent)] hover:brightness-95'}
         ${disabled ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}
         transition-all duration-200 font-bold py-4 px-8 rounded-full text-lg
-        shadow-lg touch-manipulation text-[var(--btn-text-contrast)]
+        shadow-lg touch-manipulation btn-bright-text
       `}
     >
       {isSpeaking ? '🔊 Speaking...' : '🔊 Listen'}

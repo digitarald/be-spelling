@@ -15,7 +15,7 @@ export function DueBadge({ count, className = '' }: DueBadgeProps) {
   }
 
   return (
-    <div className={`${className} bg-[var(--danger)] text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)] px-4 py-2 rounded-full text-sm font-bold shadow-md`}>
+    <div className={`${className} bg-[var(--danger)] btn-bright-text px-4 py-2 rounded-full text-sm font-bold shadow-md`}>
       📚 {count} word{count === 1 ? '' : 's'} due
     </div>
   );

@@ -28,7 +28,7 @@ export function RatingBar({ onRate, disabled = false, className = '' }: RatingBa
               ${disabled ? 'opacity-50 cursor-not-allowed' : 'active:scale-95 hover:brightness-95'}
               font-bold py-4 px-6 rounded-2xl text-xl
               transition-all duration-200 shadow-lg touch-manipulation border border-[color:var(--border)]
-              flex items-center justify-center gap-3 text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)]
+              flex items-center justify-center gap-3 btn-bright-text
             `}
           >
             <span className="text-2xl">{rating.emoji}</span>

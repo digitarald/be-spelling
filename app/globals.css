@@ -10,16 +10,23 @@
   --border: #e3e6ed;
 
   /* Accents & semantic colors (pastel friendly) */
-  --accent: #7ab6f9;        /* soft sky blue */
-  --accent-active: #4d9af5; /* stronger for active / speaking */
-  --accent-contrast: #0f2542;
-  --rate-nailed: #8ed79f;  /* mint green */
-  --rate-almost: #ffd37e;  /* peachy yellow */
-  --rate-stumped: #ff9fa5; /* soft coral red */
-  --warning: #ffe089;
-  --danger: #ff8c8c;
-  --info: #b7e4f9;
-  --muted: #64748b;
+  --accent: #b8dcff;        /* lighter sky tint */
+  --accent-active: #94c8ff; /* slightly deeper pastel for active */
+  --accent-contrast: #0f2542; /* unchanged for rare contrast needs */
+  --rate-nailed: #bfeed0;   /* soft mint */
+  --rate-almost: #ffe9b8;   /* butter peach */
+  --rate-stumped: #ffc9cf;  /* blush rose */
+  --warning: #ffeec2;       /* pale amber */
+  --danger: #ffb5b5;        /* light cherry */
+  --info: #d6f2ff;          /* ice blue */
+  --muted: #6c7a8a;         /* softened slate for text hints */
+  /* Stronger text variants for contrast on white surfaces */
+  --rate-nailed-strong: #5fbf86;  /* deeper mint for text */
+  --rate-almost-strong: #e0b04c;  /* golden pastel for text */
+
+  /* Gradient tokens (light) */
+  --gradient-start: #f8ecff; /* soft lavender */
+  --gradient-end: #e0f4ff;   /* pale sky */
 
   /* Hint / instructional surfaces */
   --hint-bg: #fff9e6;
@@ -46,16 +53,24 @@
     --surface-alt: #24324a;
     --border: #334155;
 
-    --accent: #60a5fa;
-    --accent-active: #3b82f6;
+    /* Dark mode pastel tints (toned down saturation but still distinct) */
+    --accent: #7cc6ff;
+    --accent-active: #57b5ff;
     --accent-contrast: #dbeafe;
-    --rate-nailed: #34d399; /* more saturated for contrast in dark */
-    --rate-almost: #fbbf24;
-    --rate-stumped: #f87171;
-    --warning: #facc15;
-    --danger: #ef4444;
-    --info: #22d3ee;
-    --muted: #94a3b8;
+    --rate-nailed: #63e2b3; /* luminous mint */
+    --rate-almost: #fcd97e; /* soft golden */
+    --rate-stumped: #ff9fa8; /* softened coral */
+    --warning: #f9e4a8;
+    --danger: #ff8181;
+    --info: #5edcf6;
+    --muted: #9dadc2; /* slightly lighter for readability */
+  /* Strong text variants for dark mode (still readable on dark surfaces) */
+  --rate-nailed-strong: #3dd093;
+  --rate-almost-strong: #f2c25c;
+
+    /* Gradient tokens (dark) */
+    --gradient-start: #1e1b2e; /* deep indigo slate */
+    --gradient-end: #0f2740;   /* deep teal navy */
 
   --hint-bg: #3a2f12;
   --hint-border: #a16207;
@@ -174,3 +189,14 @@ button:focus-visible {
   outline: 3px solid var(--accent-active);
   outline-offset: 2px;
 }
+
+/* Accessible button helper for bright (high-luminance) backgrounds.
+   Ensures dark text color is used so contrast >= 4.5:1 in both light & dark themes.
+   Use on pastel / semantic colors like accent/rate/danger that are too light for white text in dark mode. */
+.btn-bright-text { color: var(--btn-text) !important; }
+
+/* Application gradients */
+.app-loading-gradient {
+  background: linear-gradient(to bottom, var(--gradient-start), var(--gradient-end));
+}
+

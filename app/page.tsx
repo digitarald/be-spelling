@@ -255,13 +255,13 @@ export default function StudyPage() {
             <div className="space-y-4">
               <Link
                 href="/manage"
-                className="block bg-[var(--accent)] hover:brightness-95 text-[var(--btn-text-contrast)] font-bold py-4 px-8 rounded-2xl text-lg transition-colors shadow-lg"
+                className="block bg-[var(--accent)] hover:brightness-95 btn-bright-text font-bold py-4 px-8 rounded-2xl text-lg transition-colors shadow-lg"
               >
                 ✨ Generate Words
               </Link>
               <Link
                 href="/settings"
-                className="block bg-[var(--accent-active)] hover:brightness-110 text-[var(--btn-text-contrast)] font-bold py-3 px-6 rounded-2xl text-md transition-colors shadow-md"
+                className="block bg-[var(--accent-active)] hover:brightness-110 btn-bright-text font-bold py-3 px-6 rounded-2xl text-md transition-colors shadow-md"
               >
                 ⚙️ Settings
               </Link>
@@ -282,13 +282,13 @@ export default function StudyPage() {
           <div className="space-y-4">
             <Link 
               href="/manage"
-              className="block bg-[var(--accent)] hover:brightness-95 text-[var(--btn-text-contrast)] font-bold py-4 px-8 rounded-2xl text-lg transition-colors shadow-lg"
+              className="block bg-[var(--accent)] hover:brightness-95 btn-bright-text font-bold py-4 px-8 rounded-2xl text-lg transition-colors shadow-lg"
             >
               📖 Manage Words
             </Link>
             <Link 
               href="/settings"
-              className="block bg-[var(--accent-active)] hover:brightness-110 text-[var(--btn-text-contrast)] font-bold py-4 px-8 rounded-2xl text-lg transition-colors shadow-lg"
+              className="block bg-[var(--accent-active)] hover:brightness-110 btn-bright-text font-bold py-4 px-8 rounded-2xl text-lg transition-colors shadow-lg"
             >
               ⚙️ Settings
             </Link>
@@ -367,7 +367,7 @@ export default function StudyPage() {
                   {!showAnswer && (
                     <button
                       onClick={handleCheck}
-                      className="flex-1 min-w-[40%] bg-[var(--rate-nailed)] hover:brightness-95 text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)] font-bold py-3 px-6 rounded-2xl transition-colors shadow-md"
+                      className="flex-1 min-w-[40%] bg-[var(--rate-nailed)] hover:brightness-95 btn-bright-text font-bold py-3 px-6 rounded-2xl transition-colors shadow-md"
                     >
                       ✅ Check
                     </button>
@@ -426,11 +426,11 @@ export default function StudyPage() {
                 <div className="text-sm text-[var(--muted)]">Total Words</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-[var(--rate-almost)]">{studyStats.due}</div>
+                <div className="text-2xl font-bold text-[var(--rate-almost-strong)]">{studyStats.due}</div>
                 <div className="text-sm text-[var(--muted)]">Due Today</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-[var(--rate-nailed)]">{studyStats.learned}</div>
+                <div className="text-2xl font-bold text-[var(--rate-nailed-strong)]">{studyStats.learned}</div>
                 <div className="text-sm text-[var(--muted)]">Learned</div>
               </div>
             </div>

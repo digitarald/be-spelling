@@ -197,7 +197,7 @@ export default function SettingsPage() {
           {/* Test Voice Button */}
           <button
             onClick={testVoice}
-            className="w-full bg-[var(--accent)] hover:brightness-95 text-[var(--btn-text-contrast)] font-bold py-3 px-4 rounded-xl transition-colors shadow-md"
+            className="w-full bg-[var(--accent)] hover:brightness-95 btn-bright-text font-bold py-3 px-4 rounded-xl transition-colors shadow-md"
           >
             🔊 Test Voice
           </button>
@@ -210,8 +210,8 @@ export default function SettingsPage() {
           className={`
             w-full font-bold py-4 px-6 rounded-2xl text-lg shadow-lg transition-all
             ${isSaving 
-              ? 'bg-[var(--muted)] cursor-not-allowed text-[var(--btn-text-contrast)]' 
-              : 'bg-[var(--rate-nailed)] hover:brightness-95 active:scale-95 text-[var(--btn-text)] dark:text-[var(--btn-text-contrast)]'
+              ? 'bg-[var(--muted)] cursor-not-allowed btn-bright-text' 
+              : 'bg-[var(--rate-nailed)] hover:brightness-95 active:scale-95 btn-bright-text'
             }
           `}
         >

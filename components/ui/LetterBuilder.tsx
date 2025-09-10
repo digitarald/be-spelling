@@ -96,7 +96,7 @@ export function LetterBuilder({ target, value, onChange, onComplete, disabled, c
             className={
               'w-10 h-12 flex items-center justify-center rounded-xl ' +
               (value[i]
-                ? 'bg-[var(--accent)] text-[var(--btn-text-contrast)] animate-fade-in'
+                ? 'bg-[var(--accent)] btn-bright-text animate-fade-in'
                 : 'bg-[var(--surface)] text-[color:var(--border)] border border-[color:var(--border)]')
             }
           >
@@ -140,7 +140,7 @@ export function LetterBuilder({ target, value, onChange, onComplete, disabled, c
           type="button"
           onClick={handleBackspace}
           disabled={disabled || value.length === 0}
-          className="flex-1 bg-[var(--accent)] disabled:opacity-40 text-[var(--btn-text-contrast)] font-bold py-3 rounded-2xl shadow-md active:scale-95 hover:brightness-95"
+          className="flex-1 bg-[var(--accent)] disabled:opacity-40 btn-bright-text font-bold py-3 rounded-2xl shadow-md active:scale-95 hover:brightness-95"
         >
           ⌫ Undo
         </button>
@@ -148,7 +148,7 @@ export function LetterBuilder({ target, value, onChange, onComplete, disabled, c
           type="button"
           onClick={handleReset}
           disabled={disabled || value.length === 0}
-          className="flex-1 bg-[var(--accent-active)] disabled:opacity-40 text-[var(--btn-text-contrast)] font-bold py-3 rounded-2xl shadow-md active:scale-95 hover:brightness-95"
+          className="flex-1 bg-[var(--accent-active)] disabled:opacity-40 btn-bright-text font-bold py-3 rounded-2xl shadow-md active:scale-95 hover:brightness-95"
         >
           🔄 Reset
         </button>
