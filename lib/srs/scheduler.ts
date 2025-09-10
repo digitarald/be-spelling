@@ -86,10 +86,29 @@ export class SpacedRepetitionService {
     if (dueWords.length === 0) {
       return null;
     }
-
     // Sort by due date (earliest first)
     dueWords.sort((a, b) => new Date(a.due).getTime() - new Date(b.due).getTime());
-    
+
+    // Mild randomization for the "initial list" / early-learning stage:
+    // When many brand-new words (interval===0 & reps===0) are all due at once we don't
+    // want to drill them in the exact insertion order every session. We pick randomly
+    // among a small prefix of the earliest new/early words to keep variety while still
+    // roughly respecting due order.
+    const earlyPool = dueWords.filter(w => (w.interval === 0 && (w.reps ?? 0) === 0) || (w.reps ?? 0) < 2);
+    if (earlyPool.length > 1) {
+      // Limit pool size so we don't drift too far from schedule (take earliest subset only)
+      const earliestIds = new Set(
+        dueWords
+          .filter(w => earlyPool.includes(w))
+          .slice(0, Math.min(5, earlyPool.length))
+          .map(w => w.wordId)
+      );
+      const sample = Array.from(earliestIds);
+      const pick = sample[Math.floor(Math.random() * sample.length)];
+      return pick;
+    }
+
+    // Fallback: strict earliest due
     return dueWords[0].wordId;
   }
 

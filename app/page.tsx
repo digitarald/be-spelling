@@ -20,6 +20,7 @@ export default function StudyPage() {
   const [studyStats, setStudyStats] = useState({ total: 0, due: 0, learned: 0 });
   const [isLoading, setIsLoading] = useState(true);
   const [feedback, setFeedback] = useState<string>('');
+  const [isOnboarding, setIsOnboarding] = useState(false);
 
   // Load next word and stats
   const loadNextWord = async () => {
@@ -123,8 +124,19 @@ export default function StudyPage() {
   useEffect(() => {
     const initialize = async () => {
       setIsLoading(true);
-      await loadNextWord();
-      await loadStats();
+      try {
+        const allWords = await wordRepository.getAllWords();
+        if (allWords.length === 0) {
+          // First-ever visit: no words generated yet
+          setIsOnboarding(true);
+        } else {
+          setIsOnboarding(false);
+          await loadNextWord();
+          await loadStats();
+        }
+      } catch (e) {
+        console.error('Initialization error', e);
+      }
       setIsLoading(false);
     };
     
@@ -143,6 +155,43 @@ export default function StudyPage() {
   }
 
   if (!currentWord) {
+    if (isOnboarding) {
+      return (
+        <div className="min-h-screen bg-gradient-to-b from-blue-100 to-purple-100 flex flex-col items-center justify-center px-6">
+          <div className="text-center max-w-md space-y-6 animate-fade-in">
+            <div className="text-8xl mb-2">✨</div>
+            <h1 className="text-3xl font-bold text-gray-800">Welcome to Be-Spelling!</h1>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              Let&apos;s generate your first batch of spelling words using the AI word generator.
+              You&apos;ll then listen, build the word from letters, and rate how well you knew it.
+            </p>
+            <div className="bg-white/70 backdrop-blur rounded-2xl p-5 shadow-md text-left text-gray-700 space-y-2">
+              <p className="font-semibold text-gray-800">Getting started:</p>
+              <ol className="list-decimal list-inside space-y-1 text-sm">
+                <li>Tap <span className="font-semibold">Generate Words</span>.</li>
+                <li>Wait a moment while words appear.</li>
+                <li>Return here to start studying right away.</li>
+              </ol>
+            </div>
+            <div className="space-y-4">
+              <Link
+                href="/manage"
+                className="block bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-2xl text-lg transition-colors shadow-lg"
+              >
+                ✨ Generate Words
+              </Link>
+              <Link
+                href="/settings"
+                className="block bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-2xl text-md transition-colors shadow-md"
+              >
+                ⚙️ Settings
+              </Link>
+            </div>
+            <p className="text-xs text-gray-500">All data stays on your device. You can export or clear it anytime.</p>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="min-h-screen bg-gradient-to-b from-green-100 to-blue-100 flex flex-col items-center justify-center px-4">
         <div className="text-center max-w-md">
